@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="aurora_bg">#07080C</color>
+    <color name="aurora_text">#E6EDF3</color>
+    <color name="aurora_accent">#22D3EE</color>
+    <color name="aurora_icon_bg">#0B1020</color>
+</resources>
