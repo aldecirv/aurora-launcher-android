@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private var style = Prefs.STYLE_ORIGINAL
     private var sort = Prefs.SORT_ASC
 
+    // Se a janela foi criada com o tema que mostra o papel de parede.
+    private var wallpaperTheme = false
+
     private val packageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             reloadApps()
@@ -47,6 +50,10 @@ class MainActivity : AppCompatActivity() {
     private var receiverRegistered = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        wallpaperTheme = Prefs.bgMode(this) == Prefs.BG_WALLPAPER
+        if (wallpaperTheme) {
+            setTheme(R.style.Theme_Aurora_Wallpaper)
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Background.apply(this)
@@ -77,6 +84,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // O modo papel de parede usa outro tema de janela: recria se mudou.
+        if (wallpaperTheme != (Prefs.bgMode(this) == Prefs.BG_WALLPAPER)) {
+            recreate()
+            return
+        }
         Background.apply(this)
         readPreferences()
         applyAccent()

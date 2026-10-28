@@ -75,10 +75,8 @@ class SettingsActivity : AppCompatActivity() {
             }
             if (Prefs.bgMode(this) != mode) {
                 Prefs.setBgMode(this, mode)
-                refreshBackground()
-                if (mode == Prefs.BG_COLOR && Prefs.bgColor(this) == 0) {
-                    findViewById<MaterialButton>(R.id.btnBgColor).performClick()
-                }
+                Background.clear()
+                recreate()
             }
         }
 
