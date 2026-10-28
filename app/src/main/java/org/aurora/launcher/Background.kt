@@ -79,11 +79,17 @@ object Background {
      * cor sólida de fundo — nesse caso usa a cor de texto de contraste.
      */
     fun accentOn(activity: Activity, accent: Int): Int {
-        if (Prefs.bgMode(activity) != Prefs.BG_COLOR) return accent
-        return if (Accent.contrastRatio(accent, solidColor(activity)) >= 3.0) {
-            accent
-        } else {
-            contentColor(activity)
+        return when (Prefs.bgMode(activity)) {
+            Prefs.BG_COLOR ->
+                if (Accent.contrastRatio(accent, solidColor(activity)) >= 3.0) {
+                    accent
+                } else {
+                    contentColor(activity)
+                }
+            // Sobre o papel de parede a cor de fundo é imprevisível: usa a cor
+            // de texto, que já combina com a sobreposição aplicada.
+            Prefs.BG_WALLPAPER -> contentColor(activity)
+            else -> accent
         }
     }
 
