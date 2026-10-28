@@ -118,6 +118,16 @@
                 android:value="12" />
 
             <TextView
+                android:id="@+id/bgLiveHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/wallpaper_live_hint"
+                android:textColor="@color/aurora_text_dim"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/bgScrimTitle"
                 style="@style/AuroraSectionTitle"
                 android:text="@string/background_overlay" />

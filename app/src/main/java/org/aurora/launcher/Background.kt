@@ -40,13 +40,14 @@ object Background {
             Prefs.BG_WALLPAPER -> {
                 val wallpaper = wallpaperDrawable(activity)
                 if (wallpaper != null) {
+                    // Papel de parede estático: usa a cópia desfocada.
                     root.background = wallpaper
-                    setBars(activity, Color.TRANSPARENT)
                 } else {
-                    // Sem acesso ao papel de parede: cai para o fundo do tema.
-                    root.background = ColorDrawable(ContextCompat.getColor(activity, R.color.aurora_bg))
-                    setBars(activity, ContextCompat.getColor(activity, R.color.aurora_bg))
+                    // Papel de parede animado: o sistema desenha atrás da janela
+                    // translúcida; aplicamos só a sobreposição de legibilidade.
+                    root.background = ColorDrawable(scrimColor(activity))
                 }
+                setBars(activity, Color.TRANSPARENT)
             }
 
             else -> {
@@ -91,12 +92,7 @@ object Background {
         val bitmap = loadWallpaper(activity, dm.widthPixels, dm.heightPixels) ?: return null
         val blurred = if (blur > 0) blur(bitmap, blur) else bitmap
 
-        val overlayAlpha = (scrim.coerceIn(0, Prefs.BG_SCRIM_MAX) * 255) / 100
-        val overlay = if (night) {
-            Color.argb(overlayAlpha, 0, 0, 0)
-        } else {
-            Color.argb(overlayAlpha, 255, 255, 255)
-        }
+        val overlay = scrimColor(activity)
 
         val drawable = LayerDrawable(
             arrayOf(
@@ -107,6 +103,16 @@ object Background {
         cacheKey = key
         cacheDrawable = drawable
         return drawable
+    }
+
+    /** Sobreposição que garante contraste do texto sobre o papel de parede. */
+    private fun scrimColor(activity: Activity): Int {
+        val alpha = (Prefs.bgScrim(activity).coerceIn(0, Prefs.BG_SCRIM_MAX) * 255) / 100
+        return if (isNight(activity)) {
+            Color.argb(alpha, 0, 0, 0)
+        } else {
+            Color.argb(alpha, 255, 255, 255)
+        }
     }
 
     /** Lê o papel de parede do sistema e recorta no centro no tamanho da tela. */

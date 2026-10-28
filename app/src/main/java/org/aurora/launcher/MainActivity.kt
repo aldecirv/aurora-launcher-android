@@ -47,6 +47,9 @@ class MainActivity : AppCompatActivity() {
     private var receiverRegistered = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Prefs.bgMode(this) == Prefs.BG_WALLPAPER) {
+            setTheme(R.style.Theme_Aurora_Wallpaper)
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Background.apply(this)

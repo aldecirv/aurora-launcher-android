@@ -34,6 +34,9 @@ class SettingsActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Prefs.bgMode(this) == Prefs.BG_WALLPAPER) {
+            setTheme(R.style.Theme_Aurora_Wallpaper)
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
@@ -74,11 +77,9 @@ class SettingsActivity : AppCompatActivity() {
             }
             if (Prefs.bgMode(this) != mode) {
                 Prefs.setBgMode(this, mode)
-                refreshBackground()
-                // Primeira vez em "cor sólida": já abre o seletor.
-                if (mode == Prefs.BG_COLOR && Prefs.bgColor(this) == 0) {
-                    findViewById<MaterialButton>(R.id.btnBgColor).performClick()
-                }
+                Background.clear()
+                // O modo "papel de parede" usa outro tema de janela: recria a tela.
+                recreate()
             }
         }
 
@@ -145,7 +146,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val wallpaper = mode == Prefs.BG_WALLPAPER
         listOf(
-            R.id.bgBlurTitle, R.id.bgBlurValue, R.id.bgBlurSlider,
+            R.id.bgBlurTitle, R.id.bgBlurValue, R.id.bgBlurSlider, R.id.bgLiveHint,
             R.id.bgScrimTitle, R.id.bgScrimValue, R.id.bgScrimSlider
         ).forEach { findViewById<android.view.View>(it).isVisible = wallpaper }
     }
