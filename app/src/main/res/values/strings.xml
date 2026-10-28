@@ -27,7 +27,7 @@
     <string name="choose_bg_color">Escolher cor do fundo</string>
     <string name="wallpaper_blur">Desfoque do papel de parede</string>
     <string name="background_overlay">Sobreposição (legibilidade)</string>
-    <string name="wallpaper_live_hint">Wallpapers animados usam a prévia estática do sistema, desfocada — por isso não se movem.</string>
+    <string name="wallpaper_live_hint">Wallpapers animados aparecem ao vivo e não podem ser desfocados por apps comuns. Use a sobreposição para garantir a leitura.</string>
 
     <string name="icon_size">Tamanho dos ícones</string>
     <string name="ui_zoom">Zoom da interface</string>

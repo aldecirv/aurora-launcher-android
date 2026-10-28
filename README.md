@@ -41,6 +41,7 @@ app/src/main/java/org/aurora/launcher/
   não podem ser recoloridos de forma perfeita.
 - "Linhas por tela" só tem efeito no modo grade (colunas > 1).
 - **Papel de parede animado** (wallpaper ao vivo) é exibido pelo sistema, sem desfoque; o desfoque funciona em imagens estáticas. A sobreposição garante a leitura nos dois casos.
+- O fundo de wallpaper usa a flag nativa `windowShowWallpaper` **sem** janela translúcida, evitando artefatos de composição ao rolar a lista.
 - A tela de **Configurações** mantém o fundo do tema para preservar a legibilidade dos textos.
 
 ## Gerar o APK (GitHub Actions)
