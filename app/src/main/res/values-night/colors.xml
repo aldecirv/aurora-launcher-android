@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema escuro -->
+    <color name="aurora_bg">#07080C</color>
+    <color name="aurora_surface">#0D1017</color>
+    <color name="aurora_text">#E6EDF3</color>
+    <color name="aurora_text_dim">#93A3B8</color>
+    <color name="aurora_accent">#22D3EE</color>
+    <color name="aurora_divider">#1F2937</color>
+    <color name="aurora_icon_bg">#0B1020</color>
+</resources>

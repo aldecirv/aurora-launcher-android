@@ -1,45 +1,59 @@
 # Aurora Launcher (Android nativo)
 
-Launcher minimalista com lista alfabética e índice lateral — identidade visual do Aurora.
+Launcher minimalista com lista alfabética, busca, temas e personalização.
 
-## Como gerar o APK (sem instalar Android SDK)
+## Novidades da versão 1.1
 
-O projeto já vem com um workflow do GitHub Actions:
-
-1. Crie um repositório no GitHub e envie esta pasta:
-   ```bash
-   cd aurora-launcher-android
-   git init && git add -A
-   git commit -m "Aurora Launcher"
-   git branch -M main
-   git remote add origin https://github.com/SEU_USUARIO/aurora-launcher-android.git
-   git push -u origin main
-   ```
-2. No GitHub: aba **Actions** → **Build APK** → aguarde o verde.
-3. Abra a execução → **Artifacts** → baixe **aurora-launcher-debug.zip**.
-4. Descompacte o `.apk`.
-
-## Instalar no celular
-
-1. Ative **"Instalar apps desconhecidos"** para o app usado (Arquivos/Chrome).
-2. Abra o APK e instale.
-3. Defina como tela inicial: **Configurações → Apps → Apps padrão → App de início → Aurora Launcher**.
-   (ou pressione o botão Home e escolha "Aurora Launcher" → **Sempre**)
-
-## Recursos
-
-- Lista todos os apps instalados (precisa de `QUERY_ALL_PACKAGES` no Android 11+)
-- Índice alfabético lateral com toque para pular
-- Tema escuro (#07080C) com acento ciano
-- Voltar não sai do launcher
+- **Tema claro / escuro / automático** (segue o sistema), aplicado em todas as telas e persistido.
+- **Busca em tempo real** por nome, com botão de limpar e mensagem de "nenhum resultado".
+- **Ordenação** A–Z / Z–A pelo botão ao lado da busca.
+- **Atualização automática** da lista quando um app é instalado, removido ou atualizado.
+- **Tamanho dos ícones** (28–64 dp) e **zoom da interface** (85–130%).
+- **Colunas** (1–5) e **linhas por tela** (3–8) para o modo grade.
+- **Estilo dos ícones**: original, monocromático ou escala de cinza.
+- **Formato dos ícones**: original, arredondado ou círculo.
+- **Tela de configurações** completa com **Restaurar padrões**.
 
 ## Estrutura
 
 ```
-app/src/main/java/org/aurora/launcher/MainActivity.kt   → tela e lista de apps
-app/src/main/java/org/aurora/launcher/AppAdapter.kt     → itens da lista
-app/src/main/AndroidManifest.xml                        → filtro HOME (launcher)
-.github/workflows/build.yml                             → compila o APK na nuvem
+app/src/main/java/org/aurora/launcher/
+├── AuroraApp.kt        aplica o tema salvo antes das Activities
+├── Prefs.kt            preferências (SharedPreferences)
+├── IconLoader.kt       rasteriza/cacheia ícones com filtro e máscara
+├── MainActivity.kt     busca, lista, índice e ordenação
+├── AppAdapter.kt       lista/grade com cabeçalhos de letra
+├── SettingsActivity.kt tela de configurações
+└── AppInfo.kt          modelo de aplicativo
 ```
+
+## Limitações (Android)
+
+- O **formato** e o **filtro** são aplicados na cópia desenhada pelo launcher; alguns
+  ícones adaptativos (camadas) podem perder detalhes ao circular/arredondar.
+- Launchers **não alteram** o ícone real do app no sistema — só como ele é exibido aqui.
+- Ícones de apps com proteção (DRM/assinatura) continuam exibidos normalmente, mas
+  não podem ser recoloridos de forma perfeita.
+- "Linhas por tela" só tem efeito no modo grade (colunas > 1).
+
+## Gerar o APK (GitHub Actions)
+
+O repositório já tem o workflow `.github/workflows/build.yml`:
+
+1. `git push` na branch `main`
+2. **Actions → Build APK** → aguarde
+3. **Artifacts → aurora-launcher-debug** → baixe o `.apk`
+
+## Instalar e testar
+
+1. Instale o APK (permita "apps desconhecidos").
+2. Abra **Aurora Launcher** pelo menu (ícone do app).
+3. Teste:
+   - digite na busca e use o **X** para limpar;
+   - toque no ícone de **ordenar** e alterne A–Z / Z–A;
+   - abra **Configurações** (engrenagem) e mude tema, tamanhos, colunas, estilo e formato;
+   - volte e confirme que tudo foi aplicado;
+   - **Restaurar padrões** volta ao estado inicial.
+4. Defina como tela inicial: **Configurações → Apps → Apps padrão → App de início → Aurora Launcher**.
 
 Licença: MIT.

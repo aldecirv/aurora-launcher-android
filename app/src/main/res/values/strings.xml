@@ -1,4 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Aurora Launcher</string>
+
+    <!-- Busca -->
+    <string name="search_hint">Pesquisar aplicativos</string>
+    <string name="no_apps_found">Nenhum aplicativo encontrado</string>
+    <string name="no_apps_installed">Nenhum aplicativo instalado</string>
+
+    <!-- Ações -->
+    <string name="settings">Configurações</string>
+    <string name="sort">Ordenar</string>
+    <string name="sort_name_asc">Nome (A–Z)</string>
+    <string name="sort_name_desc">Nome (Z–A)</string>
+
+    <!-- Tema -->
+    <string name="theme">Tema</string>
+    <string name="theme_system">Automático (sistema)</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+
+    <!-- Aparência -->
+    <string name="icon_size">Tamanho dos ícones</string>
+    <string name="ui_zoom">Zoom da interface</string>
+    <string name="columns">Colunas</string>
+    <string name="rows">Linhas por tela</string>
+    <string name="icon_style">Estilo dos ícones</string>
+    <string name="icon_shape">Formato dos ícones</string>
+    <string name="reset_defaults">Restaurar padrões</string>
+
+    <string name="style_original">Original</string>
+    <string name="style_mono">Monocromático</string>
+    <string name="style_gray">Escala de cinza</string>
+
+    <string name="shape_original">Original</string>
+    <string name="shape_rounded">Arredondado</string>
+    <string name="shape_circle">Círculo</string>
 </resources>

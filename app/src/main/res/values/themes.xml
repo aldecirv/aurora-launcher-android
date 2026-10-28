@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Aurora" parent="Theme.Material3.Dark.NoActionBar">
+
+    <style name="Theme.Aurora" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/aurora_bg</item>
         <item name="android:statusBarColor">@color/aurora_bg</item>
         <item name="android:navigationBarColor">@color/aurora_bg</item>
+        <item name="android:windowLightStatusBar">@bool/aurora_light_status_bar</item>
         <item name="colorPrimary">@color/aurora_accent</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/aurora_text</item>
+        <item name="android:textColorSecondary">@color/aurora_text_dim</item>
+        <item name="android:textColorHint">@color/aurora_text_dim</item>
+    </style>
+
+    <style name="AuroraSectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">22dp</item>
+        <item name="android:textColor">@color/aurora_text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AuroraValue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">@color/aurora_text_dim</item>
+        <item name="android:textSize">13sp</item>
     </style>
 </resources>

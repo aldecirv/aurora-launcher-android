@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="aurora_bg">#07080C</color>
-    <color name="aurora_text">#E6EDF3</color>
-    <color name="aurora_accent">#22D3EE</color>
-    <color name="aurora_icon_bg">#0B1020</color>
+    <!-- Tema claro (padrão) -->
+    <color name="aurora_bg">#F5F7FB</color>
+    <color name="aurora_surface">#FFFFFF</color>
+    <color name="aurora_text">#101828</color>
+    <color name="aurora_text_dim">#5B6577</color>
+    <color name="aurora_accent">#0E7490</color>
+    <color name="aurora_divider">#D0D5DD</color>
+    <color name="aurora_icon_bg">#E6EEF5</color>
 </resources>
