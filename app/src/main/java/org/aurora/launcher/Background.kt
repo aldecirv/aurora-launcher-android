@@ -158,36 +158,55 @@ object Background {
         }
     }
 
-    /** Lê o papel de parede do sistema e recorta no centro no tamanho da tela. */
+    /**
+     * Lê o papel de parede: usa a imagem estática quando existe e, para
+     * wallpapers animados, a prévia (thumbnail) fornecida pelo sistema.
+     */
     private fun loadWallpaper(activity: Activity, width: Int, height: Int): Bitmap? {
         val manager = WallpaperManager.getInstance(activity)
-        val drawable = try {
-            @Suppress("DEPRECATION")
-            manager.drawable
-        } catch (_: Throwable) {
-            null
-        } ?: return null
 
-        val source: Bitmap = if (drawable is BitmapDrawable && drawable.bitmap != null) {
-            drawable.bitmap
-        } else {
-            val rendered = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            drawable.setBounds(0, 0, width, height)
-            drawable.draw(Canvas(rendered))
-            rendered
+        // Wallpaper animado ativo: a prévia do componente representa melhor a tela.
+        var source: Bitmap? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            source = try {
+                manager.wallpaperInfo?.loadThumbnail(activity.packageManager)
+                    ?.let { toBitmap(activity, it, width, height) }
+            } catch (_: Throwable) {
+                null
+            }
         }
 
-        if (source.width <= 0 || source.height <= 0) return null
+        if (source == null) {
+            val static = try {
+                @Suppress("DEPRECATION")
+                manager.drawable
+            } catch (_: Throwable) {
+                null
+            }
+            source = static?.let { toBitmap(activity, it, width, height) }
+        }
 
-        val scale = max(width.toFloat() / source.width, height.toFloat() / source.height)
-        val scaledW = (source.width * scale).toInt().coerceAtLeast(width)
-        val scaledH = (source.height * scale).toInt().coerceAtLeast(height)
-        val scaled = Bitmap.createScaledBitmap(source, scaledW, scaledH, true)
+        val bitmap = source ?: return null
+        if (bitmap.width <= 0 || bitmap.height <= 0) return null
+
+        val scale = max(width.toFloat() / bitmap.width, height.toFloat() / bitmap.height)
+        val scaledW = (bitmap.width * scale).toInt().coerceAtLeast(width)
+        val scaledH = (bitmap.height * scale).toInt().coerceAtLeast(height)
+        val scaled = Bitmap.createScaledBitmap(bitmap, scaledW, scaledH, true)
         val x = ((scaledW - width) / 2).coerceAtLeast(0)
         val y = ((scaledH - height) / 2).coerceAtLeast(0)
         val cropped = Bitmap.createBitmap(scaled, x, y, width, height)
-        if (scaled !== cropped && scaled !== source) scaled.recycle()
+        if (scaled !== cropped && scaled !== bitmap) scaled.recycle()
         return cropped
+    }
+
+    private fun toBitmap(activity: Activity, drawable: Drawable, width: Int, height: Int): Bitmap {
+        if (drawable is BitmapDrawable && drawable.bitmap != null) return drawable.bitmap
+
+        val rendered = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        drawable.setBounds(0, 0, width, height)
+        drawable.draw(Canvas(rendered))
+        return rendered
     }
 
     /**

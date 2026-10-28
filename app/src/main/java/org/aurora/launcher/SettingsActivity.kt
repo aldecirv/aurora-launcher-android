@@ -75,9 +75,10 @@ class SettingsActivity : AppCompatActivity() {
             }
             if (Prefs.bgMode(this) != mode) {
                 Prefs.setBgMode(this, mode)
-                Background.clear()
-                // O modo "papel de parede" usa outro tema de janela: recria a tela.
-                recreate()
+                refreshBackground()
+                if (mode == Prefs.BG_COLOR && Prefs.bgColor(this) == 0) {
+                    findViewById<MaterialButton>(R.id.btnBgColor).performClick()
+                }
             }
         }
 

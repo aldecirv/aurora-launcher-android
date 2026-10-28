@@ -13,15 +13,6 @@
         <item name="android:textColorHint">@color/aurora_text_dim</item>
     </style>
 
-    <!-- Usado quando o fundo é o papel de parede: deixa o sistema desenhá-lo atrás. -->
-    <style name="Theme.Aurora.Wallpaper" parent="Theme.Aurora">
-        <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
-
     <style name="AuroraSectionTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
