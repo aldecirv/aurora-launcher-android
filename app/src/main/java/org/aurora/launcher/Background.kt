@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.WallpaperManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -111,16 +112,21 @@ object Background {
     /** Lê o papel de parede do sistema e recorta no centro no tamanho da tela. */
     private fun loadWallpaper(activity: Activity, width: Int, height: Int): Bitmap? {
         val manager = WallpaperManager.getInstance(activity)
-        val source: Bitmap? = try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                manager.getBitmap()
-            } else {
-                @Suppress("DEPRECATION")
-                (manager.drawable as? BitmapDrawable)?.bitmap
-            }
+        val drawable = try {
+            @Suppress("DEPRECATION")
+            manager.drawable
         } catch (_: Throwable) {
             null
         } ?: return null
+
+        val source: Bitmap = if (drawable is BitmapDrawable && drawable.bitmap != null) {
+            drawable.bitmap
+        } else {
+            val rendered = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            drawable.setBounds(0, 0, width, height)
+            drawable.draw(Canvas(rendered))
+            rendered
+        }
 
         if (source.width <= 0 || source.height <= 0) return null
 
@@ -131,7 +137,7 @@ object Background {
         val x = ((scaledW - width) / 2).coerceAtLeast(0)
         val y = ((scaledH - height) / 2).coerceAtLeast(0)
         val cropped = Bitmap.createBitmap(scaled, x, y, width, height)
-        if (scaled !== cropped) scaled.recycle()
+        if (scaled !== cropped && scaled !== source) scaled.recycle()
         return cropped
     }
 
