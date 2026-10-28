@@ -59,6 +59,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupBackground() {
         val group = findViewById<RadioGroup>(R.id.bgGroup)
+        // As preferências são a fonte da verdade: evita que o Android restaure
+        // um estado antigo e dispare o listener regravando a opção anterior.
+        group.isSaveEnabled = false
         when (Prefs.bgMode(this)) {
             Prefs.BG_COLOR -> group.check(R.id.bgColor)
             Prefs.BG_WALLPAPER -> group.check(R.id.bgWallpaper)
@@ -221,6 +224,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupTheme() {
         val group = findViewById<RadioGroup>(R.id.themeGroup)
+        group.isSaveEnabled = false
         when (Prefs.theme(this)) {
             Prefs.THEME_LIGHT -> group.check(R.id.themeLight)
             Prefs.THEME_DARK -> group.check(R.id.themeDark)
