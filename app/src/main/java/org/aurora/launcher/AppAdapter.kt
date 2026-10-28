@@ -23,6 +23,8 @@ class AppAdapter(
     private val style: Int,
     private val gridMode: Boolean,
     private val cellHeightPx: Int,
+    private val textColor: Int,
+    private val accentColor: Int,
     private val onClick: (AppInfo) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -57,7 +59,7 @@ class AppAdapter(
         private val label: TextView = view.findViewById(R.id.headerLabel)
         fun bind(letter: Char) {
             label.text = letter.toString()
-            label.setTextColor(Accent.color(context))
+            label.setTextColor(accentColor)
         }
     }
 
@@ -74,6 +76,7 @@ class AppAdapter(
             icon.setImageBitmap(IconLoader.load(context, app, iconSizePx, shape, style))
             label.text = app.label
             label.textSize = textSizeSp
+            label.setTextColor(textColor)
 
             if (gridMode && cellHeightPx > 0) {
                 itemView.layoutParams?.let {

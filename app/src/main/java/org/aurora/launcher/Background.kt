@@ -13,6 +13,7 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import kotlin.math.max
 
 /**
@@ -30,11 +31,9 @@ object Background {
 
         when (Prefs.bgMode(activity)) {
             Prefs.BG_COLOR -> {
-                // Sem cor escolhida ainda: usa o fundo do tema como base.
-                val color = Prefs.bgColor(activity).takeIf { it != 0 }
-                    ?: ContextCompat.getColor(activity, R.color.aurora_bg)
+                val color = solidColor(activity)
                 root.background = ColorDrawable(color)
-                setBars(activity, color)
+                setBars(activity, color, lightIcons = Accent.luminance(color) > 0.45)
             }
 
             Prefs.BG_WALLPAPER -> {
@@ -47,16 +46,50 @@ object Background {
                     // translúcida; aplicamos só a sobreposição de legibilidade.
                     root.background = ColorDrawable(scrimColor(activity))
                 }
-                setBars(activity, Color.TRANSPARENT)
+                setBars(activity, Color.TRANSPARENT, lightIcons = !isNight(activity))
             }
 
             else -> {
                 val color = ContextCompat.getColor(activity, R.color.aurora_bg)
                 root.background = ColorDrawable(color)
-                setBars(activity, color)
+                setBars(activity, color, lightIcons = !isNight(activity))
             }
         }
     }
+
+    /** Cor de texto com contraste garantido sobre o fundo atual. */
+    fun contentColor(activity: Activity): Int {
+        if (Prefs.bgMode(activity) != Prefs.BG_COLOR) {
+            return ContextCompat.getColor(activity, R.color.aurora_text)
+        }
+        return Accent.onColor(solidColor(activity))
+    }
+
+    /** Versão atenuada da cor de texto (para textos secundários). */
+    fun dimColor(activity: Activity): Int {
+        if (Prefs.bgMode(activity) != Prefs.BG_COLOR) {
+            return ContextCompat.getColor(activity, R.color.aurora_text_dim)
+        }
+        val base = contentColor(activity)
+        return Color.argb(170, Color.red(base), Color.green(base), Color.blue(base))
+    }
+
+    /**
+     * Mantém a cor de destaque, a menos que ela fique ilegível sobre uma
+     * cor sólida de fundo — nesse caso usa a cor de texto de contraste.
+     */
+    fun accentOn(activity: Activity, accent: Int): Int {
+        if (Prefs.bgMode(activity) != Prefs.BG_COLOR) return accent
+        return if (Accent.contrastRatio(accent, solidColor(activity)) >= 3.0) {
+            accent
+        } else {
+            contentColor(activity)
+        }
+    }
+
+    private fun solidColor(activity: Activity): Int =
+        Prefs.bgColor(activity).takeIf { it != 0 }
+            ?: ContextCompat.getColor(activity, R.color.aurora_bg)
 
     fun clear() {
         cacheKey = null
@@ -64,9 +97,13 @@ object Background {
     }
 
     @Suppress("DEPRECATION")
-    private fun setBars(activity: Activity, color: Int) {
+    private fun setBars(activity: Activity, color: Int, lightIcons: Boolean) {
         activity.window.statusBarColor = color
         activity.window.navigationBarColor = color
+
+        val controller = WindowInsetsControllerCompat(activity.window, activity.window.decorView)
+        controller.isAppearanceLightStatusBars = lightIcons
+        controller.isAppearanceLightNavigationBars = lightIcons
     }
 
     private fun isNight(activity: Activity): Boolean =

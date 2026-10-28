@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private var style = Prefs.STYLE_ORIGINAL
     private var sort = Prefs.SORT_ASC
 
+    // Indica se a janela foi criada com o tema translúcido do papel de parede.
+    private var wallpaperTheme = false
+
     private val packageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             reloadApps()
@@ -47,7 +50,8 @@ class MainActivity : AppCompatActivity() {
     private var receiverRegistered = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Prefs.bgMode(this) == Prefs.BG_WALLPAPER) {
+        wallpaperTheme = Prefs.bgMode(this) == Prefs.BG_WALLPAPER
+        if (wallpaperTheme) {
             setTheme(R.style.Theme_Aurora_Wallpaper)
         }
         super.onCreate(savedInstanceState)
@@ -80,6 +84,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Trocou o modo de fundo nas configurações? A janela precisa do tema certo.
+        if (wallpaperTheme != (Prefs.bgMode(this) == Prefs.BG_WALLPAPER)) {
+            recreate()
+            return
+        }
         Background.apply(this)
         readPreferences()
         applyAccent()
@@ -137,7 +146,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Aplica a cor de destaque escolhida ao campo de busca e aos botões. */
     private fun applyAccent() {
-        val accent = Accent.color(this)
+        val accent = Background.accentOn(this, Accent.color(this))
 
         findViewById<TextInputLayout>(R.id.searchLayout).apply {
             setBoxStrokeColorStateList(
@@ -220,7 +229,9 @@ class MainActivity : AppCompatActivity() {
             shape = shape,
             style = style,
             gridMode = gridMode,
-            cellHeightPx = cellHeight
+            cellHeightPx = cellHeight,
+            textColor = Background.contentColor(this),
+            accentColor = Background.accentOn(this, Accent.color(this))
         ) { app -> openApp(app) }
 
         val span = columns.coerceIn(1, 5)
@@ -234,6 +245,7 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = adapter
 
         emptyView.visibility = if (apps.isEmpty()) View.VISIBLE else View.GONE
+        emptyView.setTextColor(Background.dimColor(this))
         emptyView.text = if (allApps.isEmpty()) {
             getString(R.string.no_apps_installed)
         } else {
@@ -251,7 +263,7 @@ class MainActivity : AppCompatActivity() {
         letters.forEach { letter ->
             val tv = TextView(this).apply {
                 text = letter.toString()
-                setTextColor(Accent.color(this@MainActivity))
+                setTextColor(Background.accentOn(this@MainActivity, Accent.color(this@MainActivity)))
                 textSize = 10f * (Prefs.zoom(this@MainActivity) / 100f)
                 gravity = Gravity.CENTER
                 setPadding(10, 6, 10, 6)

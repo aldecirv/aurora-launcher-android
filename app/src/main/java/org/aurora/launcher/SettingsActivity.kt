@@ -34,15 +34,10 @@ class SettingsActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Prefs.bgMode(this) == Prefs.BG_WALLPAPER) {
-            setTheme(R.style.Theme_Aurora_Wallpaper)
-        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
         findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
-
-        Background.apply(this)
 
         accentRow = findViewById(R.id.accentRow)
         buildAccentRow()
@@ -136,7 +131,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun refreshBackground() {
         Background.clear()
-        Background.apply(this)
         updateBackgroundVisibility()
     }
 
