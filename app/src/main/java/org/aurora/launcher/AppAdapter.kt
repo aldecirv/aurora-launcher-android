@@ -57,6 +57,7 @@ class AppAdapter(
         private val label: TextView = view.findViewById(R.id.headerLabel)
         fun bind(letter: Char) {
             label.text = letter.toString()
+            label.setTextColor(Accent.color(context))
         }
     }
 

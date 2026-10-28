@@ -60,6 +60,31 @@
                     android:textColor="@color/aurora_text" />
             </RadioGroup>
 
+            <!-- Cor de destaque -->
+            <TextView style="@style/AuroraSectionTitle" android:text="@string/accent_color" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <LinearLayout
+                    android:id="@+id/accentRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCustomColor"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/choose_color" />
+
             <!-- Ícones -->
             <TextView style="@style/AuroraSectionTitle" android:text="@string/icon_size" />
             <TextView

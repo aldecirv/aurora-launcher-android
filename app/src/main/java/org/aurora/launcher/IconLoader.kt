@@ -12,7 +12,6 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.Drawable
 import android.util.LruCache
-import androidx.core.content.ContextCompat
 
 /**
  * Desenha o ícone do app em um Bitmap aplicando:
@@ -63,7 +62,7 @@ object IconLoader {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         when (style) {
             Prefs.STYLE_MONO -> paint.colorFilter = PorterDuffColorFilter(
-                ContextCompat.getColor(context, R.color.aurora_accent),
+                Accent.color(context),
                 PorterDuff.Mode.SRC_IN
             )
             Prefs.STYLE_GRAY -> paint.colorFilter =

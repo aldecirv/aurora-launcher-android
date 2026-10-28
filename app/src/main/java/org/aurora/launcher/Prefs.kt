@@ -71,5 +71,9 @@ object Prefs {
     fun sort(ctx: Context) = sp(ctx).getInt("sort", SORT_ASC)
     fun setSort(ctx: Context, value: Int) = sp(ctx).edit().putInt("sort", value).apply()
 
+    /** Cor de destaque (ARGB). 0 = usar a cor padrão do tema. */
+    fun accent(ctx: Context) = sp(ctx).getInt("accent", 0)
+    fun setAccent(ctx: Context, value: Int) = sp(ctx).edit().putInt("accent", value).apply()
+
     fun reset(ctx: Context) = sp(ctx).edit().clear().apply()
 }

@@ -2,7 +2,7 @@
 
 Launcher minimalista com lista alfabética, busca, temas e personalização.
 
-## Novidades da versão 1.1
+## Novidades da versão 1.3
 
 - **Tema claro / escuro / automático** (segue o sistema), aplicado em todas as telas e persistido.
 - **Busca em tempo real** por nome, com botão de limpar e mensagem de "nenhum resultado".
@@ -13,6 +13,7 @@ Launcher minimalista com lista alfabética, busca, temas e personalização.
 - **Estilo dos ícones**: original, monocromático ou escala de cinza.
 - **Formato dos ícones**: original, arredondado ou círculo.
 - **Tela de configurações** completa com **Restaurar padrões**.
+- **Cor de destaque personalizável**: 9 predefinições + seletor RGB para escolher **qualquer cor** (aplicada ao índice lateral, cabeçalhos, busca, sliders, botões e ícones monocromáticos).
 
 ## Estrutura
 
@@ -20,6 +21,8 @@ Launcher minimalista com lista alfabética, busca, temas e personalização.
 app/src/main/java/org/aurora/launcher/
 ├── AuroraApp.kt        aplica o tema salvo antes das Activities
 ├── Prefs.kt            preferências (SharedPreferences)
+├── Accent.kt           cor de destaque + contraste automático
+├── ColorPickerDialog.kt seletor RGB de qualquer cor
 ├── IconLoader.kt       rasteriza/cacheia ícones com filtro e máscara
 ├── MainActivity.kt     busca, lista, índice e ordenação
 ├── AppAdapter.kt       lista/grade com cabeçalhos de letra

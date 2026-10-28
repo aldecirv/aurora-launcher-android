@@ -26,6 +26,14 @@
     <string name="rows">Linhas por tela</string>
     <string name="icon_style">Estilo dos ícones</string>
     <string name="icon_shape">Formato dos ícones</string>
+    <string name="accent_color">Cor de destaque</string>
+    <string name="accent_default">Cor padrão do tema</string>
+    <string name="choose_color">Escolher qualquer cor</string>
+    <string name="color_red">Vermelho (R)</string>
+    <string name="color_green">Verde (G)</string>
+    <string name="color_blue">Azul (B)</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">OK</string>
     <string name="reset_defaults">Restaurar padrões</string>
 
     <string name="style_original">Original</string>

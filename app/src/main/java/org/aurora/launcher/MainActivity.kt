@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,12 +70,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         readPreferences()
+        applyAccent()
         reloadApps()
     }
 
     override fun onResume() {
         super.onResume()
         readPreferences()
+        applyAccent()
         reloadApps()
         registerPackageReceiver()
     }
@@ -125,6 +128,23 @@ class MainActivity : AppCompatActivity() {
         shape = Prefs.shape(this)
         style = Prefs.style(this)
         sort = Prefs.sort(this)
+    }
+
+    /** Aplica a cor de destaque escolhida ao campo de busca e aos botões. */
+    private fun applyAccent() {
+        val accent = Accent.color(this)
+
+        findViewById<TextInputLayout>(R.id.searchLayout).apply {
+            setBoxStrokeColorStateList(
+                Accent.stateListFocused(accent, getColor(R.color.aurora_divider))
+            )
+            setStartIconTintList(Accent.stateList(accent))
+            setEndIconTintList(Accent.stateList(accent))
+        }
+
+        listOf(R.id.btnSort, R.id.btnSettings).forEach { id ->
+            findViewById<ImageButton>(id).imageTintList = Accent.stateList(accent)
+        }
     }
 
     /** Recarrega a lista de apps instalados. */
@@ -226,7 +246,7 @@ class MainActivity : AppCompatActivity() {
         letters.forEach { letter ->
             val tv = TextView(this).apply {
                 text = letter.toString()
-                setTextColor(getColor(R.color.aurora_text_dim))
+                setTextColor(Accent.color(this@MainActivity))
                 textSize = 10f * (Prefs.zoom(this@MainActivity) / 100f)
                 gravity = Gravity.CENTER
                 setPadding(10, 6, 10, 6)
