@@ -12,6 +12,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
@@ -38,6 +39,8 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
 
+        Background.apply(this)
+
         accentRow = findViewById(R.id.accentRow)
         buildAccentRow()
 
@@ -48,10 +51,103 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         setupTheme()
+        setupBackground()
         setupSliders()
         setupSpinners()
         setupReset()
         applyAccent()
+        updateBackgroundVisibility()
+    }
+
+    private fun setupBackground() {
+        val group = findViewById<RadioGroup>(R.id.bgGroup)
+        when (Prefs.bgMode(this)) {
+            Prefs.BG_COLOR -> group.check(R.id.bgColor)
+            Prefs.BG_WALLPAPER -> group.check(R.id.bgWallpaper)
+            else -> group.check(R.id.bgTheme)
+        }
+        group.setOnCheckedChangeListener { _, checkedId ->
+            val mode = when (checkedId) {
+                R.id.bgColor -> Prefs.BG_COLOR
+                R.id.bgWallpaper -> Prefs.BG_WALLPAPER
+                else -> Prefs.BG_THEME
+            }
+            if (Prefs.bgMode(this) != mode) {
+                Prefs.setBgMode(this, mode)
+                refreshBackground()
+                // Primeira vez em "cor sólida": já abre o seletor.
+                if (mode == Prefs.BG_COLOR && Prefs.bgColor(this) == 0) {
+                    findViewById<MaterialButton>(R.id.btnBgColor).performClick()
+                }
+            }
+        }
+
+        findViewById<MaterialButton>(R.id.btnBgColor).setOnClickListener {
+            val initial = Prefs.bgColor(this).takeIf { it != 0 }
+                ?: ContextCompat.getColor(this, R.color.aurora_bg)
+            ColorPickerDialog(this, initial) { color ->
+                Prefs.setBgColor(this, color)
+                refreshBackground()
+            }.show()
+        }
+
+        bindBackgroundSlider(
+            R.id.bgBlurSlider, R.id.bgBlurValue, "",
+            Prefs.bgBlur(this), 0, Prefs.BG_BLUR_MAX
+        ) { Prefs.setBgBlur(this, it) }
+
+        bindBackgroundSlider(
+            R.id.bgScrimSlider, R.id.bgScrimValue, "%",
+            Prefs.bgScrim(this), 0, Prefs.BG_SCRIM_MAX
+        ) { Prefs.setBgScrim(this, it) }
+    }
+
+    /**
+     * Slider de fundo: salva o valor em tempo real, mas só redesenha o papel
+     * de parede quando o dedo é solto (evita recalcular o desfoque a cada pixel).
+     */
+    private fun bindBackgroundSlider(
+        sliderId: Int,
+        valueId: Int,
+        suffix: String,
+        initial: Int,
+        min: Int,
+        max: Int,
+        onChange: (Int) -> Unit
+    ) {
+        val slider = findViewById<Slider>(sliderId)
+        val valueView = findViewById<TextView>(valueId)
+
+        slider.valueFrom = min.toFloat()
+        slider.valueTo = max.toFloat()
+        slider.value = initial.coerceIn(min, max).toFloat()
+        valueView.text = "${slider.value.toInt()}$suffix"
+
+        slider.addOnChangeListener { _, value, _ ->
+            valueView.text = "${value.toInt()}$suffix"
+            onChange(value.toInt())
+        }
+        slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) = Unit
+            override fun onStopTrackingTouch(slider: Slider) = refreshBackground()
+        })
+    }
+
+    private fun refreshBackground() {
+        Background.clear()
+        Background.apply(this)
+        updateBackgroundVisibility()
+    }
+
+    private fun updateBackgroundVisibility() {
+        val mode = Prefs.bgMode(this)
+        findViewById<android.view.View>(R.id.btnBgColor).isVisible = mode == Prefs.BG_COLOR
+
+        val wallpaper = mode == Prefs.BG_WALLPAPER
+        listOf(
+            R.id.bgBlurTitle, R.id.bgBlurValue, R.id.bgBlurSlider,
+            R.id.bgScrimTitle, R.id.bgScrimValue, R.id.bgScrimSlider
+        ).forEach { findViewById<android.view.View>(it).isVisible = wallpaper }
     }
 
     private fun applyAccentChoice(color: Int) {
@@ -91,7 +187,10 @@ class SettingsActivity : AppCompatActivity() {
     private fun applyAccent() {
         val accent = Accent.color(this)
 
-        listOf(R.id.iconSizeSlider, R.id.zoomSlider, R.id.columnsSlider, R.id.rowsSlider).forEach { id ->
+        listOf(
+            R.id.iconSizeSlider, R.id.zoomSlider, R.id.columnsSlider, R.id.rowsSlider,
+            R.id.bgBlurSlider, R.id.bgScrimSlider
+        ).forEach { id ->
             findViewById<Slider>(id).apply {
                 trackTintList = Accent.stateList(accent)
                 thumbTintList = Accent.stateList(accent)
@@ -99,13 +198,21 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        listOf(R.id.themeSystem, R.id.themeLight, R.id.themeDark).forEach { id ->
+        listOf(
+            R.id.themeSystem, R.id.themeLight, R.id.themeDark,
+            R.id.bgTheme, R.id.bgColor, R.id.bgWallpaper
+        ).forEach { id ->
             findViewById<RadioButton>(id).buttonTintList = Accent.stateList(accent)
         }
 
         findViewById<MaterialButton>(R.id.btnReset).apply {
             backgroundTintList = Accent.stateList(accent)
             setTextColor(Accent.onColor(accent))
+        }
+
+        findViewById<MaterialButton>(R.id.btnBgColor).apply {
+            strokeColor = Accent.stateList(accent)
+            setTextColor(accent)
         }
 
         findViewById<MaterialButton>(R.id.btnCustomColor).apply {
@@ -227,6 +334,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.btnReset).setOnClickListener {
             Prefs.reset(this)
             IconLoader.clear()
+            Background.clear()
             (application as AuroraApp).applyTheme()
             recreate()
         }

@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Background.apply(this)
 
         recycler = findViewById(R.id.recycler)
         indexBar = findViewById(R.id.indexBar)
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Background.apply(this)
         readPreferences()
         applyAccent()
         reloadApps()

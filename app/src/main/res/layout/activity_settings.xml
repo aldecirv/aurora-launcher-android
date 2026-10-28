@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/root"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/aurora_bg"
@@ -59,6 +60,79 @@
                     android:text="@string/theme_dark"
                     android:textColor="@color/aurora_text" />
             </RadioGroup>
+
+            <!-- Fundo -->
+            <TextView style="@style/AuroraSectionTitle" android:text="@string/background" />
+
+            <RadioGroup
+                android:id="@+id/bgGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/bgTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bg_theme"
+                    android:textColor="@color/aurora_text" />
+
+                <RadioButton
+                    android:id="@+id/bgColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bg_color"
+                    android:textColor="@color/aurora_text" />
+
+                <RadioButton
+                    android:id="@+id/bgWallpaper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bg_wallpaper"
+                    android:textColor="@color/aurora_text" />
+            </RadioGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBgColor"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/choose_bg_color" />
+
+            <TextView
+                android:id="@+id/bgBlurTitle"
+                style="@style/AuroraSectionTitle"
+                android:text="@string/wallpaper_blur" />
+            <TextView
+                android:id="@+id/bgBlurValue"
+                style="@style/AuroraValue"
+                android:text="12" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/bgBlurSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="0"
+                android:valueTo="25"
+                android:stepSize="1"
+                android:value="12" />
+
+            <TextView
+                android:id="@+id/bgScrimTitle"
+                style="@style/AuroraSectionTitle"
+                android:text="@string/background_overlay" />
+            <TextView
+                android:id="@+id/bgScrimValue"
+                style="@style/AuroraValue"
+                android:text="40%" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/bgScrimSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="0"
+                android:valueTo="80"
+                android:stepSize="5"
+                android:value="40" />
 
             <!-- Cor de destaque -->
             <TextView style="@style/AuroraSectionTitle" android:text="@string/accent_color" />

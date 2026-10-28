@@ -30,6 +30,15 @@ object Prefs {
     const val STYLE_MONO = 1
     const val STYLE_GRAY = 2
 
+    // Fundo
+    const val BG_THEME = 0
+    const val BG_COLOR = 1
+    const val BG_WALLPAPER = 2
+    const val BG_BLUR_MAX = 25
+    const val BG_BLUR_DEFAULT = 12
+    const val BG_SCRIM_MAX = 80
+    const val BG_SCRIM_DEFAULT = 40
+
     // Limites usados pela tela de configurações
     const val ICON_MIN = 28
     const val ICON_MAX = 64
@@ -74,6 +83,26 @@ object Prefs {
     /** Cor de destaque (ARGB). 0 = usar a cor padrão do tema. */
     fun accent(ctx: Context) = sp(ctx).getInt("accent", 0)
     fun setAccent(ctx: Context, value: Int) = sp(ctx).edit().putInt("accent", value).apply()
+
+    // ---- Fundo da tela ----
+
+    fun bgMode(ctx: Context) = sp(ctx).getInt("bg_mode", BG_THEME)
+    fun setBgMode(ctx: Context, value: Int) = sp(ctx).edit().putInt("bg_mode", value).apply()
+
+    /** Cor sólida do fundo (ARGB). 0 = ainda não escolhida. */
+    fun bgColor(ctx: Context) = sp(ctx).getInt("bg_color", 0)
+    fun setBgColor(ctx: Context, value: Int) = sp(ctx).edit().putInt("bg_color", value).apply()
+
+    fun bgBlur(ctx: Context) =
+        sp(ctx).getInt("bg_blur", BG_BLUR_DEFAULT).coerceIn(0, BG_BLUR_MAX)
+    fun setBgBlur(ctx: Context, value: Int) =
+        sp(ctx).edit().putInt("bg_blur", value.coerceIn(0, BG_BLUR_MAX)).apply()
+
+    /** Sobreposição sobre o papel de parede, em % (0–80). */
+    fun bgScrim(ctx: Context) =
+        sp(ctx).getInt("bg_scrim", BG_SCRIM_DEFAULT).coerceIn(0, BG_SCRIM_MAX)
+    fun setBgScrim(ctx: Context, value: Int) =
+        sp(ctx).edit().putInt("bg_scrim", value.coerceIn(0, BG_SCRIM_MAX)).apply()
 
     fun reset(ctx: Context) = sp(ctx).edit().clear().apply()
 }
