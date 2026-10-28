@@ -3,6 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Keystore fixo (fornecido pelo CI via secrets). Sem ele, usa a assinatura debug local.
+val auroraKeystorePath: String? = System.getenv("AURORA_KEYSTORE_PATH")
+
 android {
     namespace = "org.aurora.launcher"
     compileSdk = 35
@@ -15,9 +18,29 @@ android {
         versionName = "1.3"
     }
 
+    signingConfigs {
+        if (auroraKeystorePath != null) {
+            create("aurora") {
+                storeFile = file(auroraKeystorePath)
+                storePassword = System.getenv("AURORA_KEYSTORE_PASS")
+                keyAlias = System.getenv("AURORA_KEY_ALIAS")
+                keyPassword = System.getenv("AURORA_KEY_PASS")
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            // Garante a mesma assinatura em todas as builds (atualização sem desinstalar).
+            if (auroraKeystorePath != null) {
+                signingConfig = signingConfigs.getByName("aurora")
+            }
+        }
         release {
             isMinifyEnabled = false
+            if (auroraKeystorePath != null) {
+                signingConfig = signingConfigs.getByName("aurora")
+            }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
