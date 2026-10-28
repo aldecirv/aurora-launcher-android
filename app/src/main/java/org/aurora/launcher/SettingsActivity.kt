@@ -95,7 +95,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<Slider>(id).apply {
                 trackTintList = Accent.stateList(accent)
                 thumbTintList = Accent.stateList(accent)
-                haloColor = accent
+                setHaloColor(accent)
             }
         }
 
