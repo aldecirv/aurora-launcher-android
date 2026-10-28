@@ -20,11 +20,16 @@
             android:stateNotNeeded="true"
             android:theme="@style/Theme.Aurora">
 
-            <!-- Torna o app elegivel como TELA INICIAL (launcher) -->
+            <!-- Tela inicial (launcher) -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Icone na gaveta de aplicativos -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
